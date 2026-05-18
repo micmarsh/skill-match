@@ -45,6 +45,8 @@
   ::ai-alert
 
  :<- [::description-words]
+ ;; this is a goofy way to do things: first arg is vector if multiple, otherwise is single
+ ;; that's not consistent typing!
  (fn [words _]
    (not (empty? (set/intersection words #{"ai" "llm" "llms" "agentic"})))))
 
