@@ -2,7 +2,6 @@
   (:require
     [clojure.string :as str]))
 
-
 (def ^:const split-characters
   [\space \& \/ \-])
 

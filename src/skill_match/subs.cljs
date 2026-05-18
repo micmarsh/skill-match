@@ -4,6 +4,11 @@
    [re-frame.core :as re-frame]
    [skill-match.matching :as matching]))
 
+(defn def-extractor [key]
+  (re-frame/reg-sub
+   (keyword *ns* key)
+   (fn [db _] (get db key))))
+
 (re-frame/reg-sub
  ::description-words
  (fn [db]
@@ -36,7 +41,14 @@
  ::skills-lists
  (fn [db _] (:skills db)))
 
-(re-frame/reg-sub ::additional-selections (fn [db _] (:additional-selections db)))
+(re-frame/reg-sub
+  ::ai-alert
+
+ :<- [::description-words]
+ (fn [words _]
+   (not (empty? (set/intersection words #{"ai" "llm" "llms" "agentic"})))))
+
+(def-extractor :additional-selections)
 
 (comment (set/union nil nil #{})
          )

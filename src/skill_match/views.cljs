@@ -32,7 +32,10 @@
       [:h3 "Paste Job Description Here"]
       [:textarea#job-description
        {:style {:height 600 :width 450}
-        :on-change #(->> % .-target .-value (vector ::events/description-update) re-frame/dispatch)}]]]
+        :on-change #(->> % .-target .-value (vector ::events/description-update) re-frame/dispatch)}]]
+     (let [has-ai? (re-frame/subscribe [::subs/ai-alert])]
+       (when @has-ai?
+         [:span {:style {:color "red"}} "⚠️ This Posting Refers to various AI buzzwords"]))]
     (skill-checkbox-lists)]])
 
   
