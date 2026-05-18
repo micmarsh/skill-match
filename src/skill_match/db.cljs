@@ -20,4 +20,5 @@
   {:job-description ""
    :skills (into {} (for [[title items] skills-data] 
                       [title (map #(identity {:id % :label %}) items)]))
-   :indexed-skills (matching/skills-index skills-data)})
+   ;:indexed-skills (matching/skills-index skills-data)
+   })
