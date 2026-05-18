@@ -5,9 +5,9 @@
    [skill-match.matching :as matching]))
 
 (re-frame/reg-sub
- ::test-job-desc
+ ::description-words
  (fn [db]
-   (:job-description db)))
+   (matching/desc-words (:job-description db))))
 
 (defn- skills-matches-desc [desc-words]
   (fn [skill]
@@ -19,11 +19,13 @@
 
 (re-frame/reg-sub
  ::selection
- 
- (fn [{:keys [job-description skills additional-selections]},
+ :<- [::description-words]
+ :<- [::skills-lists]
+ :<- [::additional-selections]
+
+ (fn [[desc-words skills additional-selections],
       [_ list-title]]
-   (let [specific-skills (get skills list-title)
-         desc-words (matching/desc-words job-description)]
+   (let [specific-skills (get skills list-title)]
      (->> specific-skills 
           (map :id) 
           (filter (skills-matches-desc desc-words)) 
@@ -33,6 +35,8 @@
 (re-frame/reg-sub
  ::skills-lists
  (fn [db _] (:skills db)))
+
+(re-frame/reg-sub ::additional-selections (fn [db _] (:additional-selections db)))
 
 (comment (set/union nil nil #{})
          )
