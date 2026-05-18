@@ -18,31 +18,21 @@
         (.preventDefault e)
         (act)))))
 
-(defn- skills-matches-desc [desc-words]
-  (fn [skill]
-    (-> skill 
-        matching/skill->words
-        (clojure.set/intersection desc-words)
-        (empty?)
-        (not))))
+
 
 (defn- skill-checkbox-lists [] 
   (doall
-   (let [skills-lists (re-frame/subscribe [::subs/skills-lists])  
-         desc-words @(re-frame/subscribe [::subs/description-words])] 
-     (for [list @skills-lists
-           :let [model (r/atom (->> (val list)
-                                    (map :id)
-                                    (filter (skills-matches-desc desc-words))
-                                    (set)))]]
-       ^{:key (key list)} ; probably not necessary, but good practice for you
-       [:div [:h3 (str (key list) " (" (count @model) ")")]
+   (let [skills-lists (re-frame/subscribe [::subs/skills-lists]) ] 
+     (for [list @skills-lists 
+           :let [list-title (key list)
+                 selection @(re-frame/subscribe [::subs/selection list-title])
+                 model (r/atom selection)]]
+       ^{:key list-title}
+       [:div [:h3 (str list-title " (" (count @model) ")")]
         [selection-list
          :choices (val list)
          :model model
-         :on-change (fn [m]
-                      (reset! model m)
-                      (println m))]]))))
+         :on-change (fn [m] (re-frame/dispatch [::events/update-selection list-title m]))]]))))
 
 
 (defn main-panel []

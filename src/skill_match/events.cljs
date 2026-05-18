@@ -14,3 +14,11 @@
  (fn-traced 
   [db [_, val] ]  
   (assoc db :job-description val)))
+
+(re-frame/reg-event-db
+ ::update-selection
+ (fn-traced
+  [db [_ list-title selection]]
+  (assoc-in db [:additional-selections list-title] (set selection))))
+
+()

@@ -18,7 +18,7 @@
 
 (def default-db
   {:job-description ""
-   :skills (into {} (for [[title items] skills-data] 
+   :skills (into {} (for [[title items] skills-data]
                       [title (map #(identity {:id % :label %}) items)]))
-   ;:indexed-skills (matching/skills-index skills-data)
+   :additional-selections {} ; {"List Title" #{words}}
    })

@@ -29,7 +29,9 @@
     ".NET Core"
     "LINQ"
     "Visual Studio"
-    "Python"]
+    "Python"
+    "Clojure"
+    "ClojureScript"]
 
 
    "Concepts & Practices"
