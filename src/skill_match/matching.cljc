@@ -18,19 +18,6 @@
              clean 
              str/lower-case))))
 
-(comment (skill->words "java script"))
-
-;; todo move this to a subscription or something?
-;; skills-data -> {"lowercasedWord" ["List" index-num]} (value is "path", can pass into "get"!)
-#_(defn skills-index
-  [skills-data]
-  (into {}
-        (for [[list-name skills] skills-data
-              [idx skill] (map-indexed #(vector %1 %2) skills)
-              clean-word (skill->words skill)]
-          [(str/lower-case clean-word) [list-name idx]])))
-
-
 (defn desc-words [description]
   (->> (str/split description  #"\s")
        (mapcat #(str/split % split-regex))

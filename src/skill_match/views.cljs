@@ -26,22 +26,24 @@
         (empty?)
         (not))))
 
-(defn- skill-checkbox-lists []
-  (let [skills-lists (re-frame/subscribe [::subs/skills-lists]) 
-        desc-words @(re-frame/subscribe [::subs/description-words])]
-      (for [list @skills-lists
-            :let [model (r/atom (->> (val list)  
-                                     (map :id)
-                                     (filter (skills-matches-desc desc-words))
-                                     (set)))]]
-        ^{:key (key list)} ; probably not necessary, but good practice for you
-        [:div [:h3 (key list)]
-         [selection-list
-          :choices (val list)
-          :model model
-          :on-change (fn [m]
-                       (reset! model m)
-                       (println m))]])))
+(defn- skill-checkbox-lists [] 
+  (doall
+   (let [skills-lists (re-frame/subscribe [::subs/skills-lists])  
+         desc-words @(re-frame/subscribe [::subs/description-words])] 
+     (for [list @skills-lists
+           :let [model (r/atom (->> (val list)
+                                    (map :id)
+                                    (filter (skills-matches-desc desc-words))
+                                    (set)))]]
+       ^{:key (key list)} ; probably not necessary, but good practice for you
+       [:div [:h3 (str (key list) " (" (count @model) ")")]
+        [selection-list
+         :choices (val list)
+         :model model
+         :on-change (fn [m]
+                      (reset! model m)
+                      (println m))]]))))
+
 
 (defn main-panel []
   [:div
@@ -149,6 +151,6 @@
                     {:id "Visual Studio", :label "Visual Studio"}
                     {:id "Python", :label "Python"}])
   
-  (filter (comp sample-desc-words str/lower-case :id) sample-list)
+  (filter (comp sample-desc-words str/lower-case :id) sample-list))
   
-  )
+  
