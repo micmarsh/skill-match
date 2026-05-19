@@ -1,8 +1,7 @@
 (ns skill-match.db
   (:require
-   [skill-match.data :refer [skills-data]]
-   [skill-match.matching :as matching]
-   [cljs.spec.alpha :as s]))
+   [skill-match.functor :refer [fmap]]
+   [skill-match.data :refer [skills-data]]))
 ;; 
 ;; (s/def ::skill-name string?)
 ;; (s/def ::list-name string?)
@@ -18,7 +17,10 @@
 
 (def default-db
   {:job-description ""
-   :skills (into {} (for [[title items] skills-data]
-                      [title (map #(identity {:id % :label %}) items)]))
-   :additional-selections {} ; {"List Title" #{words}}
+   :description-words #{}
+
+   :skills (fmap (fn [items] (map #(identity {:id % :label %}) items)) 
+                 skills-data) 
+   
+   :current-selections (fmap (fn[_] #{}) skills-data) ; {"Title" #{}}
    })
