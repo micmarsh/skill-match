@@ -33,6 +33,9 @@
        (when @has-ai?
          [:span {:style {:color "red"}} "⚠️ This Posting Refers to various AI buzzwords"])))
 
+(defn- list-html []
+  [:div])
+
 (defn main-panel []
   [:div
    [:h1 "Skills Section Generator"]
@@ -41,7 +44,8 @@
     [:div
      [job-description]
      [ai-alert]]
-    (skill-checkbox-lists)]])
+    (skill-checkbox-lists)]
+   [list-html]])
 
   
   

@@ -6,7 +6,7 @@
 
 (defn def-extractor [key]
   (re-frame/reg-sub
-   (keyword *ns* key)
+   (keyword 'skill-match.subs key)
    (fn [db _] (get db key))))
 
 (re-frame/reg-sub
@@ -21,6 +21,9 @@
         (set/intersection desc-words)
         (empty?)
         (not))))
+
+(def-extractor :additional-selections)
+
 
 (re-frame/reg-sub
  ::selection
@@ -42,15 +45,12 @@
  (fn [db _] (:skills db)))
 
 (re-frame/reg-sub
-  ::ai-alert
-
+ ::ai-alert
  :<- [::description-words]
  ;; this is a goofy way to do things: first arg is vector if multiple, otherwise is single
  ;; that's not consistent typing!
  (fn [words _]
-   (not (empty? (set/intersection words #{"ai" "llm" "llms" "agentic"})))))
-
-(def-extractor :additional-selections)
+   (some #{"ai" "llm" "llms" "agentic"} words)))
 
 (comment (set/union nil nil #{})
          )
