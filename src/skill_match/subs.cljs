@@ -1,6 +1,7 @@
 (ns skill-match.subs
   (:require
-   [re-frame.core :as re-frame]))
+   [re-frame.core :as re-frame]
+   [reagent.dom.server :as render]))
 
 (defn def-extractor [key]
   (re-frame/reg-sub
@@ -23,3 +24,20 @@
  ;; that's not consistent typing!
  (fn [{:keys [description-words]} _]
    (some #{"ai" "llm" "llms" "agentic"} description-words)))
+
+(comment (def db {:current-selections [["Stuff" ["things" "other things" "third thing"]]]} )
+         )
+
+(re-frame/reg-sub
+ ::skills-html
+ (fn [{:keys [current-selections]} _]
+   (if (every? empty? (vals current-selections))
+     ""
+     (render/render-to-static-markup
+      [:div
+       [:h2 "Skills"]
+       [:div {:style {:display "flex" :justify-content "space-around"}}
+        (for [[list-title list-items] current-selections]
+          [:div
+           [:div.header-3 list-title]
+           [:ul.skills-list (map #(vector :li %) list-items)]])]]))))

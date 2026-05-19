@@ -17,6 +17,7 @@
 
 (def default-db
   {:job-description ""
+   
    :description-words #{}
 
    :skills (fmap (fn [items] (map #(identity {:id % :label %}) items)) 

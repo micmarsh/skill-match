@@ -34,7 +34,12 @@
          [:span {:style {:color "red"}} "⚠️ This Posting Refers to various AI buzzwords"])))
 
 (defn- list-html []
-  [:div])
+  (let [html (re-frame/subscribe [::subs/skills-html])] 
+    (when-not (empty? @html)
+      [:div 
+       [:button {:on-click #(js/navigator.clipboard.writeText @html)}
+        "Copy"]
+       [:div @html]])))
 
 (defn main-panel []
   [:div
