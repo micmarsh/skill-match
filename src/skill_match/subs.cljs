@@ -25,9 +25,6 @@
  (fn [{:keys [description-words]} _]
    (some #{"ai" "llm" "llms" "agentic"} description-words)))
 
-(comment (def db {:current-selections [["Stuff" ["things" "other things" "third thing"]]]} )
-         )
-
 (re-frame/reg-sub
  ::skills-html
  (fn [{:keys [current-selections]} _]

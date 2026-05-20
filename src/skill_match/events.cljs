@@ -17,13 +17,10 @@
          matching/skill->words 
          (some desc-words))))
 
-(re-frame/reg-event-db
- ::description-update
- (fn
-   [db [_, val]]
-   (let [desc-words (matching/desc-words val)]
+(defn- set-description [description db]
+  (let [desc-words (matching/desc-words description)]
      (assoc db
-            :job-description val
+            :job-description description
             :description-words desc-words
             ;; todo move things to on-write, clean complexity in subs, allow updating selection!??
             :current-selections (fmap 
@@ -32,7 +29,13 @@
                                         (map :id)
                                         (filter (skills-matches-desc desc-words))
                                         (set)))
-                                 (:skills db))))))
+                                 (:skills db)))))
+
+(re-frame/reg-event-db
+ ::description-update
+ (fn-traced
+   [db [_, description]]
+   (set-description description db)))
 
 (re-frame/reg-event-db
  ::update-selection
