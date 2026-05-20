@@ -3,11 +3,12 @@
    [re-frame.core :as re-frame]
    [reagent.dom.server :as render]))
 
-(defn def-extractor [key]
-  (re-frame/reg-sub
-   (keyword 'skill-match.subs key)
-   (fn [db _] (get db key))))
+(defn def-extractor [full-key]
+  (re-frame/reg-sub 
+   full-key
+   (fn [db _] (get db (keyword (name full-key))))))
 
+(def-extractor ::job-description)
 
 (re-frame/reg-sub
  ::skills-lists

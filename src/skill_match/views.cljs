@@ -21,25 +21,37 @@
          :model model
          :on-change (fn [m] (re-frame/dispatch [::events/update-selection list-title m]))]]))))
 
+(def ^:const textbox-size
+  {:height 600 :width 450})
+
 (defn job-description [] 
   [:div
    [:h3 "Paste Job Description Here"]
-   [:textarea#job-description
-    {:style {:height 600 :width 450}
-     :on-change #(->> % .-target .-value (vector ::events/description-update) re-frame/dispatch)}]])
+   (let [description (re-frame/subscribe [::subs/job-description])
+         editing? (r/atom true)]
+     (if @editing?
+       [:textarea#job-description-editing
+        {:style textbox-size
+         :on-change #(->> % .-target .-value (vector ::events/description-update) re-frame/dispatch)
+         :on-blur #(do (println "blurred!")
+                       (reset! editing? false))}]
+       
+       [:div#job-description
+        {:style textbox-size
+         :on-focus #(do (println "focused!")
+                        (reset! editing? true))}
+        @description]))])
 
 (defn- ai-alert []
   (let [has-ai? (re-frame/subscribe [::subs/ai-alert])]
        (when @has-ai?
          [:span {:style {:color "red"}} "⚠️ This Posting Refers to various AI buzzwords"])))
 
-(defn- list-html []
-  (let [html (re-frame/subscribe [::subs/skills-html])] 
-    (when-not (empty? @html)
-      [:div 
-       [:button {:on-click #(js/navigator.clipboard.writeText @html)}
-        "Copy"]
-       [:div @html]])))
+(defn- copy-html []
+  (let [html (re-frame/subscribe [::subs/skills-html])]
+    [:div
+     [:button {:on-click #(js/navigator.clipboard.writeText @html)}
+      "Copy"]]))
 
 (defn main-panel []
   [:div
@@ -49,8 +61,8 @@
     [:div
      [job-description]
      [ai-alert]]
-    (skill-checkbox-lists)]
-   [list-html]])
+    (skill-checkbox-lists)] 
+   [copy-html]])
 
   
   
