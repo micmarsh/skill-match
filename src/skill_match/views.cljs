@@ -5,13 +5,15 @@
    [skill-match.subs :as subs]
    [skill-match.events :as events]
    [re-com.core :refer [selection-list]]
+
    ["jquery" :as $]))
+(set! js/window.jQuery $)
+(set! js/window.$ js/window.jQuery)
 
-
-(defn- skill-checkbox-lists [] 
+(defn- skill-checkbox-lists []
   (doall
-   (let [skills-lists (re-frame/subscribe [::subs/skills-lists]) ] 
-     (for [list @skills-lists 
+   (let [skills-lists (re-frame/subscribe [::subs/skills-lists])]
+     (for [list @skills-lists
            :let [list-title (key list)
                  selection @(re-frame/subscribe [::subs/selection list-title])
                  model (r/atom selection)]]
@@ -23,31 +25,30 @@
          :on-change (fn [m] (re-frame/dispatch [::events/update-selection list-title m]))]]))))
 
 (println $)
-(set! js/window.$ $)
 
 (def ^:const textbox-size
   {:height 600 :width 450})
 
-(defn job-description [] 
+(defn job-description []
   (let [description (re-frame/subscribe [::subs/job-description])
-           editing? (r/atom true)]
-       (if @editing?
-         [:textarea#job-description-editing
-          {:style textbox-size
-           :on-change #(->> % .-target .-value (vector ::events/description-update) re-frame/dispatch)
-           :on-blur #(do (println "blurred!")
-                         (reset! editing? false))}]
-         
-         [:div#job-description
-          {:style textbox-size
-           :on-focus #(do (println "focused!")
-                          (reset! editing? true))}
-          @description])))
+        editing? (r/atom true)]
+    (if @editing?
+      [:textarea#job-description-editing
+       {:style textbox-size
+        :on-change #(->> % .-target .-value (vector ::events/description-update) re-frame/dispatch)
+        :on-blur #(do (println "blurred!")
+                      (reset! editing? false))}]
+
+      [:div#job-description
+       {:style textbox-size
+        :on-focus #(do (println "focused!")
+                       (reset! editing? true))}
+       @description])))
 
 (defn- ai-alert []
   (let [has-ai? (re-frame/subscribe [::subs/ai-alert])]
-       (when @has-ai?
-         [:span {:style {:color "red"}} "⚠️ This Posting Refers to various AI buzzwords"])))
+    (when @has-ai?
+      [:span {:style {:color "red"}} "⚠️ This Posting Refers to various AI buzzwords"])))
 
 (defn- copy-html []
   (let [html (re-frame/subscribe [::subs/skills-html])]
@@ -63,8 +64,7 @@
     [:div
      [job-description]
      [ai-alert]]
-    (skill-checkbox-lists)] 
+    (skill-checkbox-lists)]
    [copy-html]])
 
-  
-  
+
