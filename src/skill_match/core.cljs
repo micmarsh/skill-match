@@ -4,8 +4,7 @@
    [re-frame.core :as re-frame]
    [skill-match.events :as events]
    [skill-match.views :as views]
-   [skill-match.config :as config]
-   ["highlight-within-textarea"]))
+   [skill-match.config :as config]))
 
 
 (defn dev-setup []

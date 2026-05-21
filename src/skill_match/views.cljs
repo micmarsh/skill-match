@@ -5,10 +5,9 @@
    [skill-match.subs :as subs]
    [skill-match.events :as events]
    [re-com.core :refer [selection-list]]
-
-   ["jquery" :as $]))
-(set! js/window.jQuery $)
-(set! js/window.$ js/window.jQuery)
+   
+   ["jquery" :as jQuery] 
+   ["highlight-within-textarea"]))
 
 (defn- skill-checkbox-lists []
   (doall
@@ -24,26 +23,24 @@
          :model model
          :on-change (fn [m] (re-frame/dispatch [::events/update-selection list-title m]))]]))))
 
+(def $ jQuery)
+
 (println $)
 
 (def ^:const textbox-size
   {:height 600 :width 450})
 
-(defn job-description []
-  (let [description (re-frame/subscribe [::subs/job-description])
-        editing? (r/atom true)]
-    (if @editing?
-      [:textarea#job-description-editing
+(defn job-description [] 
+  (r/create-class
+   {:component-did-mount
+    (fn [_]
+      (-> ($ "#job-description")
+          (.highlightWithinTextarea #js {:highlight "foo"})))
+    :reagent-render
+    (fn []
+      [:textarea#job-description
        {:style textbox-size
-        :on-change #(->> % .-target .-value (vector ::events/description-update) re-frame/dispatch)
-        :on-blur #(do (println "blurred!")
-                      (reset! editing? false))}]
-
-      [:div#job-description
-       {:style textbox-size
-        :on-focus #(do (println "focused!")
-                       (reset! editing? true))}
-       @description])))
+        :on-change #(->> % .-target .-value (vector ::events/description-update) re-frame/dispatch)}])}))
 
 (defn- ai-alert []
   (let [has-ai? (re-frame/subscribe [::subs/ai-alert])]
