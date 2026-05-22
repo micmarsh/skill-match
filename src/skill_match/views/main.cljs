@@ -9,31 +9,32 @@
 
 (def ^:const desc-dom-id "job-description")
 
-(def ^:const skill-list-max 8)
+(def ^:const skill-list-max 9)
 
 (defn- skill-checkbox-lists []
-  (doall
    (let [skills-lists (re-frame/subscribe [::subs/skills-lists])]
      (for [list @skills-lists
            :let [list-title (key list)
                  selection @(re-frame/subscribe [::subs/selection list-title])
                  model (r/atom selection)]]
        ^{:key list-title}
-       [:div [:h3 (str list-title " (" (count @model) "/" skill-list-max "*)")]
+       [:div [:h3 (str list-title " (" (count @model) "/" skill-list-max ")")]
         [selection-list
          :choices (val list)
          :model model
-         :on-change (fn [m] (re-frame/dispatch [::events/update-selection desc-dom-id list-title m]))]]))))
+         :on-change (fn [m] (re-frame/dispatch [::events/update-selection desc-dom-id list-title m]))]])))
 
 
 (def ^:const textbox-size
   {:height 600 :width 450})
 
-(defn job-description [] 
-  (highlightable-textarea
-   {:id desc-dom-id
-    :style textbox-size
-    :on-change #(->> % .-target .-value (vector ::events/description-update desc-dom-id) re-frame/dispatch)}))
+(defn job-description []
+  [:div
+   [:h2 "Paste Job Description Here"] 
+   [highlightable-textarea
+    {:id desc-dom-id
+     :style textbox-size
+     :on-change #(->> % .-target .-value (vector ::events/description-update desc-dom-id) re-frame/dispatch)}] ])
 
 (defn- ai-alert []
   (let [has-ai? (re-frame/subscribe [::subs/ai-alert])]
