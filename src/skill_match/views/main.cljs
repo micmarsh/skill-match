@@ -1,10 +1,11 @@
-(ns skill-match.views
+(ns skill-match.views.main
   (:require
+   [re-com.core :refer [selection-list]]
    [re-frame.core :as re-frame]
    [reagent.core :as r]
-   [skill-match.subs :as subs]
    [skill-match.events :as events]
-   [re-com.core :refer [selection-list]]))
+   [skill-match.subs :as subs]
+   [skill-match.views.components :refer [highlightable-textarea]]))
 
 (def ^:const desc-dom-id "job-description")
 
@@ -29,11 +30,10 @@
   {:height 600 :width 450})
 
 (defn job-description [] 
-  [:div 
-   [:textarea
-    {:id desc-dom-id
-     :style textbox-size
-     :on-change #(->> % .-target .-value (vector ::events/description-update desc-dom-id) re-frame/dispatch)}]])
+  (highlightable-textarea
+   {:id desc-dom-id
+    :style textbox-size
+    :on-change #(->> % .-target .-value (vector ::events/description-update desc-dom-id) re-frame/dispatch)}))
 
 (defn- ai-alert []
   (let [has-ai? (re-frame/subscribe [::subs/ai-alert])]
@@ -56,4 +56,4 @@
      [ai-alert]]
     (skill-checkbox-lists)]
    [copy-html]
-   [:span "* " skill-list-max " is the current recommended number of skills given formatting of rest of resume"]])
+   [:span "*" skill-list-max " is the current recommended number of skills given formatting of rest of resume"]])
