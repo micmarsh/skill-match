@@ -7,7 +7,10 @@
    [re-com.core :refer [selection-list]]
    
    ["jquery" :as jQuery] 
+   ;; this expects "jQuery" when imported/initialized
    ["highlight-within-textarea"]))
+(def $ jQuery)
+
 
 (defn- skill-checkbox-lists []
   (doall
@@ -23,9 +26,6 @@
          :model model
          :on-change (fn [m] (re-frame/dispatch [::events/update-selection list-title m]))]]))))
 
-(def $ jQuery)
-
-(println $)
 
 (def ^:const textbox-size
   {:height 600 :width 450})
@@ -34,8 +34,19 @@
   (r/create-class
    {:component-did-mount
     (fn [_]
-      (-> ($ "#job-description")
-          (.highlightWithinTextarea #js {:highlight "foo"})))
+      ;; problems
+      ;; "c" creates ugly highlighting lol
+      ;;   can have regext for just "full word"/whatever lines up with clean
+      ;; doesn't trigger until typing, probably issue with plugin
+      ;; also doesn't trigger on update b/c is not reactive
+      (let [skill-words (re-frame/subscribe [::subs/current-selections-words])]
+        (-> ($ "#job-description")
+            (.highlightWithinTextarea
+             #js {:highlight 
+                  (fn [_] 
+                    (->> @skill-words
+                         (map (partial hash-map :className "green" :highlight))
+                         clj->js))}))))
     :reagent-render
     (fn []
       [:textarea#job-description
@@ -45,7 +56,7 @@
 (defn- ai-alert []
   (let [has-ai? (re-frame/subscribe [::subs/ai-alert])]
     (when @has-ai?
-      [:span {:style {:color "red"}} "⚠️ This Posting Refers to various AI buzzwords"])))
+      [:div {:style {:color "red"}} "⚠️ This Posting Refers to various AI buzzwords"])))
 
 (defn- copy-html []
   (let [html (re-frame/subscribe [::subs/skills-html])]
@@ -63,5 +74,3 @@
      [ai-alert]]
     (skill-checkbox-lists)]
    [copy-html]])
-
-
