@@ -4,12 +4,9 @@
    [reagent.core :as r]
    [skill-match.subs :as subs]
    [skill-match.events :as events]
-   [re-com.core :refer [selection-list]]
-   
-   ["jquery" :as jQuery] 
-   ;; this expects "jQuery" when imported/initialized
-   ["highlight-within-textarea"]))
-(def $ jQuery)
+   [re-com.core :refer [selection-list]]))
+
+(def ^:const desc-dom-id "job-description")
 
 
 (defn- skill-checkbox-lists []
@@ -24,34 +21,18 @@
         [selection-list
          :choices (val list)
          :model model
-         :on-change (fn [m] (re-frame/dispatch [::events/update-selection list-title m]))]]))))
+         :on-change (fn [m] (re-frame/dispatch [::events/update-selection desc-dom-id list-title m]))]]))))
 
 
 (def ^:const textbox-size
   {:height 600 :width 450})
 
 (defn job-description [] 
-  (r/create-class
-   {:component-did-mount
-    (fn [_]
-      ;; problems
-      ;; "c" creates ugly highlighting lol
-      ;;   can have regext for just "full word"/whatever lines up with clean
-      ;; doesn't trigger until typing, probably issue with plugin
-      ;; also doesn't trigger on update b/c is not reactive
-      (let [skill-words (re-frame/subscribe [::subs/current-selections-words])]
-        (-> ($ "#job-description")
-            (.highlightWithinTextarea
-             #js {:highlight 
-                  (fn [_] 
-                    (->> @skill-words
-                         (map (partial hash-map :className "green" :highlight))
-                         clj->js))}))))
-    :reagent-render
-    (fn []
-      [:textarea#job-description
-       {:style textbox-size
-        :on-change #(->> % .-target .-value (vector ::events/description-update) re-frame/dispatch)}])}))
+  [:div 
+   [:textarea
+    {:id desc-dom-id
+     :style textbox-size
+     :on-change #(->> % .-target .-value (vector ::events/description-update desc-dom-id) re-frame/dispatch)}]])
 
 (defn- ai-alert []
   (let [has-ai? (re-frame/subscribe [::subs/ai-alert])]
