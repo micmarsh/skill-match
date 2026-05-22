@@ -3,7 +3,7 @@
    [reagent.dom :as rdom]
    [re-frame.core :as re-frame]
    [skill-match.events :as events]
-   [skill-match.views.main :as views]
+   [skill-match.views.views :as views]
    [skill-match.config :as config]))
 
 

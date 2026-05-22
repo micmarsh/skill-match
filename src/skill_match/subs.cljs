@@ -2,8 +2,7 @@
   (:require
    [re-frame.core :as re-frame]
    [reagent.dom.server :as render]
-   [skill-match.matching :as matching]
-   [skill-match.effects.highlight :as highlight]))
+   [skill-match.matching :as matching]))
 
 (defn def-extractor [full-key]
   (re-frame/reg-sub 
@@ -30,15 +29,16 @@
         (mapcat matching/skill->words)
         (set))))
 
+(def ^:const ai-buzzwords #{"ai" "llm" "llms" "agentic" "agents" "claude" "copilot"})
+
 (re-frame/reg-sub
  ::ai-words
  ;; this is a goofy way to do things: first arg is vector if multiple, otherwise is single
  ;; that's not consistent typing!
   (fn [{:keys [description-words]} _]
     (->> description-words 
-         (filter highlight/ai-buzzwords)
+         (filter ai-buzzwords)
          (set))))
-
 
 (defn- highlight-map [color word]
   {:className color :highlight word})
