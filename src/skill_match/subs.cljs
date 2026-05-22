@@ -39,6 +39,18 @@
          (filter highlight/ai-buzzwords)
          (set))))
 
+
+(defn- highlight-map [color word]
+  {:className color :highlight word})
+
+(re-frame/reg-sub
+ ::highlights
+ :<- [::current-selections-words]
+ :<- [::ai-words]
+ (fn [[skill-words ai-words] _]
+   (concat (map (partial highlight-map "red") ai-words)
+           (map (partial highlight-map "green") skill-words))))
+
 (re-frame/reg-sub
  ::ai-alert
  :<- [::ai-words]
