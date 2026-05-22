@@ -8,6 +8,7 @@
 
 (def ^:const desc-dom-id "job-description")
 
+(def ^:const skill-list-max 8)
 
 (defn- skill-checkbox-lists []
   (doall
@@ -17,7 +18,7 @@
                  selection @(re-frame/subscribe [::subs/selection list-title])
                  model (r/atom selection)]]
        ^{:key list-title}
-       [:div [:h3 (str list-title " (" (count @model) ")")]
+       [:div [:h3 (str list-title " (" (count @model) "/" skill-list-max "*)")]
         [selection-list
          :choices (val list)
          :model model
@@ -54,4 +55,5 @@
      [job-description]
      [ai-alert]]
     (skill-checkbox-lists)]
-   [copy-html]])
+   [copy-html]
+   [:span "* " skill-list-max " is the current recommended number of skills given formatting of rest of resume"]])

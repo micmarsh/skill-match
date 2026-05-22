@@ -2,7 +2,8 @@
   (:require
    [re-frame.core :as re-frame]
    [reagent.dom.server :as render]
-   [skill-match.matching :as matching]))
+   [skill-match.matching :as matching]
+   [skill-match.effects.highlight :as highlight]))
 
 (defn def-extractor [full-key]
   (re-frame/reg-sub 
@@ -35,7 +36,7 @@
  ;; that's not consistent typing!
   (fn [{:keys [description-words]} _]
     (->> description-words 
-         (filter #{"ai" "llm" "llms" "agentic" "agents"})
+         (filter highlight/ai-buzzwords)
          (set))))
 
 (re-frame/reg-sub

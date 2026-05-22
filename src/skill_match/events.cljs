@@ -33,11 +33,11 @@
 
 (re-frame/reg-event-fx
  ::description-update
- (fn-traced
+ (fn
    [{:keys [db]} [_, dom-id description]]
    (let [new-db (set-description description db)]
      {:db new-db
-      ::highlight/selections [(:current-selections new-db) dom-id]})))
+      ::highlight/selections [new-db dom-id]})))
 
 (re-frame/reg-event-fx
  ::update-selection
@@ -45,4 +45,4 @@
    [{:keys [db]} [_ dom-id list-title selection]]
    (let [new-db (assoc-in db [:current-selections list-title] (set selection))]
     {:db new-db 
-      ::highlight/selections [(:current-selections new-db) dom-id]})))
+      ::highlight/selections [new-db dom-id]})))
