@@ -38,6 +38,14 @@ async def render_resume(input: ResumeRender):
     pdf_bytes = weasyprint_render(full_resume_text)
     return PdfResponse(pdf_bytes)
 
+# "Extra endpoints for testing and experimentation"
+
+from fastapi.responses import HTMLResponse
+@app.post("/resume.html")
+async def resume_html(input: ResumeRender):
+    html_text = render_template(template, input.skills)
+    return HTMLResponse(content=html_text)
+
 @app.get("/resume_template")
 async def resume_template():
     return template;
