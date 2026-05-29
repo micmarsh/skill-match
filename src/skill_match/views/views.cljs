@@ -50,6 +50,11 @@
      [:button {:on-click #(js/navigator.clipboard.writeText @html)}
       "Copy"]]))
 
+(defn- render-button []
+  [:div
+   [:button {:on-click #(re-frame/dispatch [::events/render-resume])} 
+    "Render"]])
+
 (def ^:const horizontal-row {:display "flex"})
 
 (defn main-panel []
@@ -63,4 +68,5 @@
       [ai-alert]]]
     (skill-checkbox-lists))
    [copy-html]
+   [render-button]
    [:span "*" skill-list-max " is the current recommended number of skills per list given formatting of rest of resume"]])

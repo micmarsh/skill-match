@@ -1,7 +1,5 @@
-
 from fastapi import FastAPI, Response
 from pydantic import BaseModel
-from typing import Dict, List
 from resume_render import render_template, SkillsDict
 from weasyprint import HTML
 
@@ -38,7 +36,7 @@ async def render_resume(input: ResumeRender):
     pdf_bytes = weasyprint_render(full_resume_text)
     return PdfResponse(pdf_bytes)
 
-# "Extra endpoints for testing and experimentation"
+# Extra endpoints for "testing and experimentation"
 
 from fastapi.responses import HTMLResponse
 @app.post("/resume.html")
