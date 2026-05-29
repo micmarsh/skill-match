@@ -10,10 +10,17 @@
 
 ;; obstacles to generalization in separate lib
 ;; * jQuery (not really, they'll just have deal with it for now)
+
+;; * lazy impl of regex matching, for example "ai" in "JetBrains"
+;;   * but maybe that should always be on "caller" b/c of how original lib works? Yeah
 ;; * input applies class names rather than colors directly (maybe this can be fixed?)
-;;   * can "jquery up" some <style> tags lol
+;;   * can "jquery up" some <style> tags https://stackoverflow.com/a/3393252
+;;   * there will actually need to be a lot of/complex considerations if color is dynamically typed in:
+;;      * "lifecycle management"
+;;      * debouncing at some point? Maybe put on view/re-frame events?
 ;; * requires unique dom id per element
 ;;   * either needs descriptive exceptions or perhaps theres a way to go reagent -> React -> raw dom
+;; * is cljs-based: maybe "best" (in a sense the most general) would be "plain" js/ts React component?
 (defn highlightable-textarea [{:keys [highlights]
                                :or {highlights (r/atom true)}
                                :as props} & body]
