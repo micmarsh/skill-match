@@ -2,7 +2,11 @@
 from fastapi import FastAPI, Response
 from pydantic import BaseModel
 from typing import List
-from utilities import render_template, weasyprint_render
+from resume_render import render_template
+from weasyprint import HTML
+
+def weasyprint_render(html: str):
+    return HTML(string=html).render().write_pdf()
 
 app = FastAPI()
 
@@ -12,10 +16,13 @@ class HtmlRender(BaseModel):
 #TODO maybe dynamic filename based on hash of content or something or other?
 pdf_headers = {"Content-Disposition": "inline; filename=Rendered.pdf"}
 
+def PdfResponse(pdf_bytes):
+    return Response(pdf_bytes, media_type="application/pdf", headers=pdf_headers)
+
 @app.post("/render_raw")
 async def render_pdf(html: HtmlRender):
     pdf_bytes = weasyprint_render(html.body)
-    return Response(pdf_bytes, media_type="application/pdf", headers=pdf_headers)
+    return PdfResponse(pdf_bytes)
 
 class ResumeRender(BaseModel):
     skills: List[str]
@@ -25,8 +32,8 @@ template:str
 with open("/home/michael/Documents/JobSearch/Resume_Template.html") as f:
     template = f.read()
 
-@app.post("render_resume")
+@app.post("/render_resume")
 async def render_resume(input: ResumeRender):
     full_resume_text = render_template(template, input.skills)
-    pdf_bytes = weasyprint_render(html.body)
-    return Response(pdf_bytes, media_type="application/pdf", headers=pdf_headers)
+    pdf_bytes = weasyprint_render(full_resume_text)
+    return PdfResponse(pdf_bytes)
