@@ -1,8 +1,8 @@
 
 from fastapi import FastAPI, Response
 from pydantic import BaseModel
-from typing import List
-from resume_render import render_template
+from typing import Dict, List
+from resume_render import render_template, SkillsDict
 from weasyprint import HTML
 
 def weasyprint_render(html: str):
@@ -25,7 +25,7 @@ async def render_pdf(html: HtmlRender):
     return PdfResponse(pdf_bytes)
 
 class ResumeRender(BaseModel):
-    skills: List[str]
+    skills: SkillsDict
 
 # TODO more robust, command-line arg/dependency injection(?)-based thing!
 template:str
@@ -37,3 +37,7 @@ async def render_resume(input: ResumeRender):
     full_resume_text = render_template(template, input.skills)
     pdf_bytes = weasyprint_render(full_resume_text)
     return PdfResponse(pdf_bytes)
+
+@app.get("/resume_template")
+async def resume_template():
+    return template;
