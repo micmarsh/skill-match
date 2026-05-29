@@ -2,11 +2,20 @@ from fastapi import FastAPI, Response
 from pydantic import BaseModel
 from resume_render import render_template, SkillsDict
 from weasyprint import HTML
+from fastapi.middleware.cors import CORSMiddleware
 
 def weasyprint_render(html: str):
     return HTML(string=html).render().write_pdf()
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:8280"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class HtmlRender(BaseModel):
     body: str
