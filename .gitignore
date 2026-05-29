@@ -29,7 +29,8 @@ profiles.clj
 
 /.shadow-cljs/
 node_modules/
-#todo figure this out!
 resources/public/js/
-/venv/
-/__pycache__/
+#todo: need to somehow generate package file to *not* ignore, "pip.txt" or something like that?
+pdf_api/venv/
+pdf_api/__pycache__/
+pdf_api/*.pdf
