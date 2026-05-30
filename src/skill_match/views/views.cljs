@@ -67,6 +67,6 @@
       [job-description]
       [ai-alert]]]
     (skill-checkbox-lists))
-   [copy-html]
+   #_[copy-html]
    [render-button]
    [:span "*" skill-list-max " is the current recommended number of skills per list given formatting of rest of resume"]])
