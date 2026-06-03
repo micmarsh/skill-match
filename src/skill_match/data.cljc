@@ -24,6 +24,7 @@
     "Kafka"
     "JetBrains IntelliJ"
     "JetBrains Rider"
+    "Entity Framework"
     "React" 
     "React.js"
     ".NET MVC"

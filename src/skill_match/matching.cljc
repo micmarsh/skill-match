@@ -8,7 +8,7 @@
 (def split-regex (->>  split-characters (str/join "|") re-pattern))
 
 (defn- clean [word]
-  (str/replace word #"\(|\)|\[|\]|\," ""))
+  (str/replace word #"\(|\)|\[|\]|\,|\." ""))
 
 (defn skill->words [skill]
   (set (for [skill-word (str/split skill split-regex)
