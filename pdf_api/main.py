@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Response
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from resume_render import render_template, SkillsDict
 from weasyprint import HTML
@@ -44,6 +45,13 @@ async def render_resume(input: ResumeRender):
     full_resume_text = render_template(template, input.skills)
     pdf_bytes = weasyprint_render(full_resume_text)
     return PdfResponse(pdf_bytes)
+
+
+app.mount("/public", StaticFiles(directory="../resources/public"), name="app")
+for loc in ["vendor", "js"]:
+    app.mount(f"/{loc}", StaticFiles(directory=f"../resources/public/{loc}"), name=f"app_{loc}")
+
+
 
 # Extra endpoints for "testing and experimentation"
 
