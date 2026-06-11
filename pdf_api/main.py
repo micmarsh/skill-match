@@ -46,12 +46,7 @@ async def render_resume(input: ResumeRender):
     pdf_bytes = weasyprint_render(full_resume_text)
     return PdfResponse(pdf_bytes)
 
-
-app.mount("/public", StaticFiles(directory="../resources/public"), name="app")
-for loc in ["vendor", "js"]:
-    app.mount(f"/{loc}", StaticFiles(directory=f"../resources/public/{loc}"), name=f"app_{loc}")
-
-
+app.mount("/", StaticFiles(directory="../resources/public", html=True), name="app")
 
 # Extra endpoints for "testing and experimentation"
 
