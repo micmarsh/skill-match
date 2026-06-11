@@ -43,13 +43,18 @@
 (defn- highlight-map [color word]
   {:className color :highlight word})
 
+(defn- regex-word-only [word]
+  (js/RegExp. (str "(?<!\\w)" word "(?!\\w)") "gi"))
+
 (re-frame/reg-sub
  ::highlights
  :<- [::current-selections-words]
  :<- [::ai-words]
- (fn [[skill-words ai-words] _]
-   (concat (map (partial highlight-map "red") ai-words)
-           (map (partial highlight-map "green") skill-words))))
+ (fn [[skill-words ai-words] _] 
+   (->> skill-words
+        (map (partial highlight-map "green"))
+        (concat (map (partial highlight-map "red") ai-words))
+        (map #(update % :highlight regex-word-only)))))
 
 (re-frame/reg-sub
  ::ai-alert
