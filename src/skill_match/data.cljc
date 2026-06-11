@@ -34,7 +34,8 @@
     "Visual Studio"
     "Python"
     "Clojure"
-    "ClojureScript"]
+    "ClojureScript",
+    "Android"]
 
 
    "Concepts & Practices"
