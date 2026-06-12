@@ -36,14 +36,15 @@
     "Clojure"
     "ClojureScript",
     "Android",
-    "Grafana"]
+    "Grafana",
+    "Kotlin"]
 
 
    "Concepts & Practices"
    ["Observability"
     "Legacy System Modernization"
     "Functional Programming"
-    "Test-Driven Design (TDD)"
+    "Test-Driven Development (TDD)"
     "Microservices Architecture"
     "Code Reviews"
     "Code Review"
@@ -52,7 +53,9 @@
     "Object-Oriented Programming (OOP)"
     "RESTful APIs"
     "Agile/Scrum"
-    "Software Development Lifecycle (SDLC)"
+  ;; this is almost complete and total filler
+  ;;  "Software Development Lifecycle (SDLC)"
     "Database Design"
-    "Full Stack Architecture"]})
+    "Full Stack Architecture"
+    "Event-Based Architectures"]})
 
