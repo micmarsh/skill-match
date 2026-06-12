@@ -45,6 +45,7 @@
     "Legacy System Modernization"
     "Functional Programming"
     "Test-Driven Development (TDD)"
+    "Automated Testing"
     "Microservices Architecture"
     "Code Reviews"
     "Code Review"
@@ -53,9 +54,9 @@
     "Object-Oriented Programming (OOP)"
     "RESTful APIs"
     "Agile/Scrum"
-  ;; this is almost complete and total filler
-  ;;  "Software Development Lifecycle (SDLC)"
+    "Software Development Lifecycle (SDLC)"
     "Database Design"
     "Full Stack Architecture"
+    "CI/CD"
     "Event-Based Architectures"]})
 
